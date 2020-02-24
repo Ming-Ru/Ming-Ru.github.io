@@ -53,8 +53,8 @@ const default_remote_speed_up = 0;
 const default_selected_tab = 1;
 const default_log_number_return = 40;
 const x_label_interval = 150;
-const serviceUUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
-const serviceUUID2 = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+const serviceUUID  = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+const serviceUUID2 = "6e400001-b5a3-f393-e0a9-e50e24dcca9a";
 const QUERY_DATA_HEADER   = 0xFF;
 const QUERY_LOG_HEADER    = 0xFD;
 const RESPONSE_HEADER_DAT = 0xFE;
@@ -194,6 +194,14 @@ function startQueryTimer() {
       .catch(error => {
         //console.log('writeValue error: ' + error);
       });
+
+      TXcharacteristic2.writeValue(aBuffer_data)
+      .then(() => {
+        //console.log('writeValue ok');
+      })
+      .catch(error => {
+        //console.log('writeValue error: ' + error);
+      });
     } else if (selectedTab === 2) {
       clearInterval(queryTimer);
     }
@@ -233,12 +241,12 @@ function onScanButtonClick2() {
       optionalServices: [serviceUUID2]
     })
     .then(device2 => {
-      console.log('> Name:             ' + device.name2);
-      console.log('> Id:               ' + device.id2);
-      console.log('> Connected:        ' + device.gatt.connected2);
+      console.log('> Name:             ' + device2.name);
+      console.log('> Id:               ' + device2.id);
+      console.log('> Connected:        ' + device2.gatt.connected);
 
-      bluetoothDevice2 = device2;
-      bluetoothDevice2.addEventListener('gattserverdisconnected', onDisconnected);
+      bluetoothDevice = device2;
+      bluetoothDevice.addEventListener('gattserverdisconnected', onDisconnected);
       connect2();
     })
     .catch(error => {
@@ -298,37 +306,35 @@ function connect() {
     });;
 }
 
-
-
 function connect2() {
   document.getElementById("query_interval").disabled = true;
 
   console.log('Connecting to Bluetooth Device...');
-  bluetoothDevice2.gatt.connect2()
+  bluetoothDevice.gatt.connect()
     .then(server => {
       console.log('> Bluetooth Device connected');
-      console.log('>> Name:             ' + server.device.name2);
-      console.log('>> Id:               ' + server.device.id2);
-      console.log('>> Connected:        ' + server.device.gatt.connected2);
-      console.log('>> Server connected: ' + server.connected2);
-      return server.getPrimaryService(serviceUUID2);
+      console.log('>> Name:             ' + server.device.name);
+      console.log('>> Id:               ' + server.device.id);
+      console.log('>> Connected:        ' + server.device.gatt.connected);
+      console.log('>> Server connected: ' + server.connected);
+      return server.getPrimaryService(serviceUUID);
     })
     .then(service => {
-      console.log('>>> Service uuid:      ' + service.uuid2);
-      console.log('>>> Service isPrimary: ' + service.isPrimary2);
+      console.log('>>> Service uuid:      ' + service.uuid);
+      console.log('>>> Service isPrimary: ' + service.isPrimary);
       console.log('Service found, getting characteristic...');
       return service.getCharacteristics();
     })
-    .then(characteristics2 => {
-      console.log('characteristics2 found, getting characteristic...');
-      characteristics2.forEach((characteristic, index) => {
+    .then(characteristics => {
+      console.log('characteristics found, getting characteristic...');
+      characteristics.forEach((characteristic, index) => {
         console.log('>>>> Characteristics #' + (index + 1));
         console.log('>>>> Characteristics uuid:  ' + characteristic.uuid2);
         console.log('>>>> Characteristics read:  ' + characteristic.properties.read);
         console.log('>>>> Characteristics write: ' + characteristic.properties.write);
       });
-      TXcharacteristic2 = characteristics2[0];
-      RXcharacteristic2 = characteristics2[1];
+      TXcharacteristic2 = characteristics[0];
+      RXcharacteristic2 = characteristics[1];
 
       RXcharacteristic2.startNotifications()
         .then(() => {
@@ -340,7 +346,7 @@ function connect2() {
           document.getElementById("btn_reconnect").style.backgroundColor  = HEX_COLOR_GRAY;
 
           console.log('Notifications started');
-          RXcharacteristic2.addEventListener('characteristicvaluechanged', parseData);
+          RXcharacteristic.addEventListener('characteristicvaluechanged2', parseData);
 
           startQueryTimer();
         });
@@ -350,6 +356,7 @@ function connect2() {
       console.log('connect error: ' + error);
     });;
 }
+
 
 function onDisconnectButtonClick() {
   if (!bluetoothDevice) {
