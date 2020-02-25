@@ -82,39 +82,47 @@
      <div class="labelContainer">
         <label class="fonts">Speed Up+: </label>
         <input id="remote_speed_up_" type="text" onchange="setSpeedUpNum()" enabled="">
+        <select id="remote_speed_up" onchange="setSpeedUpNum()">
+          <option value="#">請選擇</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          </select>
       </div>
-      <select id="remote_speed_up" onchange="setSpeedUpNum()">
-        <option value="#">請選擇</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-        </select>
+
 
       <div class="buttonContainer">
         <button id="btn_scan" class="button" onclick="onScanButtonClick()"
           style="background-color: rgb(102, 187, 106);">
-          <i class="material-icons iconfont">search</i> <a>Scan</a>
+          <i class="material-icons iconfont">search</i> <a>Scan#1</a>
         </button>
         <button id="btn_scan_2" class="button_2" onclick="onScanButtonClick2()"
         style="background-color: rgb(218, 231, 35);">
-        <i class="material-icons iconfont">search</i> <a>Scan</a>
+        <i class="material-icons iconfont">search</i> <a>Scan#2</a>
       </button>
+    </div>
+      <div class="buttonContainer"> 
         <button id="btn_disconnect" class="button" onclick="onDisconnectButtonClick()"
           style="background-color: rgb(224, 224, 224);">
-          <i class="material-icons iconfont">close</i> Disconnect
+          <i class="material-icons iconfont">close</i> Disconnect#1
         </button>
+        <button id="btn_disconnect_2" class="button" onclick="onDisconnectButtonClick2()"
+        style="background-color: rgb(173, 222, 245);">
+        <i class="material-icons iconfont">close</i> Disconnect#2
+      </button>
         <button id="btn_reconnect" class="button" onclick="onReconnectButtonClick()"
           style="background-color: rgb(224, 224, 224);" disabled="">
           <i class="material-icons iconfont">autorenew</i> Reconnect
         </button>
       </div>
     </div>
+  </div>
   </div>
 
 
