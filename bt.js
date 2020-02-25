@@ -246,7 +246,7 @@ function onScanButtonClick2() {
       console.log('> Connected:        ' + device2.gatt.connected);
 
       bluetoothDevice = device2;
-      bluetoothDevice.addEventListener('gattserverdisconnected', onDisconnected);
+      bluetoothDevice.addEventListener('gattserverdisconnected2', onDisconnected_2);
       connect2();
     })
     .catch(error => {
@@ -388,6 +388,20 @@ function onDisconnected(event) {
   document.getElementById("btn_scan").style.backgroundColor       = HEX_COLOR_GREEN;
   document.getElementById("btn_disconnect").disabled = true;
   document.getElementById("btn_disconnect").style.backgroundColor = HEX_COLOR_GRAY;
+  document.getElementById("btn_reconnect").disabled  = false;
+  document.getElementById("btn_reconnect").style.backgroundColor  = HEX_COLOR_BLUE;
+
+  clearData();
+  console.log('> Bluetooth Device disconnected');
+  window.alert("Bluetooth Device is already disconnected");
+}
+function onDisconnected_2(event) {
+  // Object event.target is Bluetooth Device getting disconnected.
+  document.getElementById("query_interval").disabled = false;
+  document.getElementById("btn_scan_2").disabled       = false;
+  document.getElementById("btn_scan_2").style.backgroundColor       = HEX_COLOR_GREEN;
+  document.getElementById("btn_disconnect_2").disabled = true;
+  document.getElementById("btn_disconnect_2").style.backgroundColor = HEX_COLOR_GRAY;
   document.getElementById("btn_reconnect").disabled  = false;
   document.getElementById("btn_reconnect").style.backgroundColor  = HEX_COLOR_BLUE;
 
