@@ -375,7 +375,7 @@ function onDisconnectButtonClick2() {
     return;
   }
   console.log('Disconnecting from Bluetooth Device...');
-  if (bluetoothDevice.gatt.connected) {
+  if (bluetoothDevice2.gatt.connected) {
     bluetoothDevice2.gatt.disconnect();
   } else {
     console.log('> Bluetooth Device is already disconnected');
