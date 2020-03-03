@@ -31,6 +31,8 @@ let newData = {
   spd_pls: 0,
   fac_pls: 0,
   fac_mns: 0,
+  BLE_FLAG: 0,
+  IR_FY: 0,
 };
 
 //charts
@@ -51,6 +53,7 @@ const device_name_filter = "HST_UART";
 const default_query_interval = 50;
 const default_data_points = 40;
 const default_remote_speed_up = 0;
+const default_IR_dist = 2;
 const default_selected_tab = 1;
 const default_selected_device = 0;
 const default_log_number_return = 40;
@@ -69,6 +72,10 @@ const BLE_REMOTE_TURN_RIGHT  = 0xE5;
 const BLE_REMOTE_STOP        = 0xE3;
 const BLE_REMOTE_FUNC_1      = 0xE1;
 const BLE_REMOTE_FUNC_2      = 0xE0;
+
+const IR_DIST_1 = 0xF1;
+const IR_DIST_2 = 0xF2;
+const IR_DIST_3 = 0xF3;
 
 const BLE_REMOTE_2_FORWARD            = 0xDB;
 const BLE_REMOTE_2_BACKWARD           = 0xD9;
@@ -95,8 +102,9 @@ window.onload = function () {
   data_points_field.value = default_data_points;
   data_points = default_data_points;
   const remote_speed_up_field = document.getElementById("remote_speed_up");
-  remote_speed_up_field.value = (remote_speed_up === null) ? default_remote_speed_up : remote_speed_up;
-
+  remote_speed_up_field.value = (remote_speed_up === null) ? default_IR_dist : remote_speed_up;
+ // const IR_dist_select_field = document.getElementByName("IR_dist_select");
+ // IR_dist_select_field.value = (IR_dist_select === null) ? default_IR_dist : IR_dist_select; 
   selectedTab = default_selected_tab;
   selectedDevice = default_selected_device;
   document.getElementById("btn_scan").style.backgroundColor       = HEX_COLOR_GREEN;
@@ -168,7 +176,7 @@ window.onload = function () {
 
     //update label factor minus
     document.getElementById("label-factor-minus").innerHTML = newData.fac_mns;
-
+    document.getElementById("label-IR-FY").innerHTML = newData.IR_FY;
     //update switch status
     document.getElementById("sw_lf").className = (newData.sw_lf == 0) ? "dot dotGreen" : "dot";
     document.getElementById("sw_lb").className = (newData.sw_lb == 0) ? "dot dotGreen" : "dot";
@@ -187,7 +195,10 @@ function radioChange(object) {
 function getCheckboxValue(d_select) {
   selectedDevice = parseInt(d_select.value);
 }
-
+function get_IR_CheckboxValue(IR_select) {
+  IR_dist_select_field = parseInt(IR_select.value);
+  setIRdistance();
+}
 
 function startQueryTimer() {
   queryTimer = setInterval(() => {
@@ -197,14 +208,6 @@ function startQueryTimer() {
       dataView_data.setUint8(0, QUERY_DATA_HEADER);
 
       TXcharacteristic.writeValue(aBuffer_data)
-      .then(() => {
-        //console.log('writeValue ok');
-      })
-      .catch(error => {
-        //console.log('writeValue error: ' + error);
-      });
-
-      TXcharacteristic2.writeValue(aBuffer_data)
       .then(() => {
         //console.log('writeValue ok');
       })
@@ -858,6 +861,32 @@ function setSpeedUpNum() {
   });
 }
 
+function setIRdistance() {
+  let aBuffer_remote = new ArrayBuffer(1);
+  let dataView_remote = new DataView(aBuffer_remote);
+switch(IR_dist_select_field)
+{
+  case 1:
+  dataView_remote.setUint8(0, IR_DIST_1);
+  break;
+  case 3:
+  dataView_remote.setUint8(0, IR_DIST_3);
+  break;
+  default:
+  case 2:
+  dataView_remote.setUint8(0, IR_DIST_2);
+  break;
+}
+    TXcharacteristic.writeValue(aBuffer_remote)
+    .then(() => {
+      //console.log('writeValue ok');
+    })
+    .catch(error => {
+      //console.log('writeValue error: ' + error);
+    });
+}
+
+
 function clearData() {
   newData.pitch_datum = 0;
   newData.force_level = 0;
@@ -877,6 +906,8 @@ function clearData() {
   newData.spd_pls = 0;
   newData.fac_pls = 0;
   newData.fac_mns = 0;
+  newData.BLE_FLAG = 0;
+  newData.IR_FY = 0;
 }
 
 function parseData(event) {
@@ -909,6 +940,8 @@ function parseData(event) {
         newData.sw_rf = parseInt(data_array[17]);
         newData.sw_lb = parseInt(data_array[18]);
         newData.sw_rb = parseInt(data_array[19]);
+        //newData.BLE_FLAG = parseInt(data_array[20]);
+        newData.IR_FY = parseInt(data_array[20]);
       }} else if(selectedTab ==2) {
         let logData = getLogFromBytes(dataView);
         var str = '<ol type="1">'

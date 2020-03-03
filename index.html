@@ -121,12 +121,17 @@
           <i class="material-icons iconfont">autorenew</i> Reconnect
         </button>
       </div>
+      
       <br>
-
+      <label>Select IR distance:</label>
+      <label><input type="radio" name="IR_dist_select" value="1" onchange="get_IR_CheckboxValue(this)">1</label>
+      <label><input type="radio" name="IR_dist_select" value="2" onchange="get_IR_CheckboxValue(this)" checked>2</label> <!-- 預設選項 -->
+      <label><input type="radio" name="IR_dist_select" value="3" onchange="get_IR_CheckboxValue(this)">3</label>
+      <br><br>
       <label>Select Device:</label>
-<label><input type="radio" name="device_select" value="1" onchange="getCheckboxValue(this)">Device 1</label>
-<label><input type="radio" name="device_select" value="0" onchange="getCheckboxValue(this)" checked>Both</label> <!-- 預設選項 -->
-<label><input type="radio" name="device_select" value="2" onchange="getCheckboxValue(this)">Device 2</label>
+      <label><input type="radio" name="device_select" value="1" onchange="getCheckboxValue(this)">Device 1</label>
+      <label><input type="radio" name="device_select" value="0" onchange="getCheckboxValue(this)" checked>Both</label> <!-- 預設選項 -->
+      <label><input type="radio" name="device_select" value="2" onchange="getCheckboxValue(this)">Device 2</label>
     </div>
   </div>
   </div>
@@ -440,6 +445,10 @@
             <div class="fonts" style="position: absolute;left: 200px;top: 130px;font-size: 24px;">
               <label>Factor Minus:</label>
               <label id="label-factor-minus">0</label>
+            </div>
+            <div class="fonts" style="position: absolute;left: 200px;top: 170px;font-size: 24px;">
+              <label>IR distance:</label>
+              <label id="label-IR-FY">0</label>
             </div>
           </div>
         </div>
