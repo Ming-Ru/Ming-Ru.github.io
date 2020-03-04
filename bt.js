@@ -940,8 +940,8 @@ function parseData(event) {
         newData.sw_rf = parseInt(data_array[17]);
         newData.sw_lb = parseInt(data_array[18]);
         newData.sw_rb = parseInt(data_array[19]);
-        //newData.BLE_FLAG = parseInt(data_array[20]);
-        newData.IR_FY = parseInt(data_array[20]);
+        newData.BLE_FLAG = parseInt(data_array[20]);
+        newData.IR_FY = parseInt(data_array[21]);
       }} else if(selectedTab ==2) {
         let logData = getLogFromBytes(dataView);
         var str = '<ol type="1">'
