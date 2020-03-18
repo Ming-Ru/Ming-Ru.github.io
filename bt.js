@@ -9,6 +9,7 @@ let query_interval = null;
 let updateTimer = null;
 let data_points = null;
 let remote_speed_up = null;
+let remote_test_mode = null;
 let selectedTab = null;
 let selectedDevice = null;
 let logData = [];
@@ -53,6 +54,7 @@ const device_name_filter = "HST_UART";
 const default_query_interval = 50;
 const default_data_points = 40;
 const default_remote_speed_up = 0;
+const default_remote_test_mode = 0;
 const default_IR_dist = 2;
 const default_selected_tab = 1;
 const default_selected_device = 0;
@@ -105,7 +107,9 @@ window.onload = function () {
   data_points_field.value = default_data_points;
   data_points = default_data_points;
   const remote_speed_up_field = document.getElementById("remote_speed_up");
-  remote_speed_up_field.value = (remote_speed_up === null) ? default_IR_dist : remote_speed_up;
+  remote_speed_up_field.value = (remote_speed_up === null) ? default_remote_speed_up : remote_speed_up;
+  //const remote_test_mode_field = document.getElementById("remote_test_mode");
+  //remote_test_mode_field.value = (remote_test_mode === null) ? default_remote_test_mode : remote_test_mode;
   // const IR_dist_select_field = document.getElementByName("IR_dist_select");
   // IR_dist_select_field.value = (IR_dist_select === null) ? default_IR_dist : IR_dist_select; 
   selectedTab = default_selected_tab;
@@ -229,7 +233,7 @@ function onScanButtonClick() {
   navigator.bluetooth.requestDevice({
     //acceptAllDevices: true,
     filters: [{
-      name: device_name_filter
+      name: device_name_filter  
     }],
     optionalServices: [serviceUUID]
   })
@@ -835,6 +839,35 @@ function setSpeedUpNum() {
     .catch(error => {
       //console.log('writeValue error: ' + error);
     });
+}
+
+function setTestMode() {
+  const newTestModeNum = parseInt(document.getElementById("remote_test_mode").value)+0xB0;
+  console.log("Set Test Mode: " + newTestModeNum);
+  remote_test_mode = newTestModeNum;
+
+  let aBuffer_remote = new ArrayBuffer(1);
+  let dataView_remote = new DataView(aBuffer_remote);
+  dataView_remote.setUint8(0, remote_test_mode);
+
+  if (selectedDevice == 0 || selectedDevice == 1) {
+    TXcharacteristic.writeValue(aBuffer_remote)
+      .then(() => {
+        //console.log('writeValue ok');
+      })
+      .catch(error => {
+        //console.log('writeValue error: ' + error);
+      });
+  }
+  if (selectedDevice == 0 || selectedDevice == 2) {
+    TXcharacteristic2.writeValue(aBuffer_remote)
+      .then(() => {
+        //console.log('writeValue ok');
+      })
+      .catch(error => {
+        //console.log('writeValue error: ' + error);
+      });
+  }
 }
 
 function setIRdistance() {
